@@ -11,3 +11,9 @@ Usage
 * python forward-*.py
 * Output is written to stdout
 
+* proxy.py forwards HTTP traffic
+
+Other Proxies
+-------------
+* SMTP: python -m smtpd -c DebuggingServer -n localhost:25
+
