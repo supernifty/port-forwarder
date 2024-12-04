@@ -1,4 +1,10 @@
-import socket, thread, select
+from __future__ import division
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+from past.utils import old_div
+import socket, _thread, select
 
 __version__ = '0.1.0 Draft 1'
 BUFLEN = 8192
@@ -6,7 +12,7 @@ VERSION = 'Python Proxy/'+__version__
 HTTPVER = 'HTTP/1.1'
 HOST = "192.168.0.103" 
 
-class ConnectionHandler:
+class ConnectionHandler(object):
     def __init__(self, connection, address, timeout):
         self.client = connection
         self.client_buffer = ''
@@ -26,7 +32,7 @@ class ConnectionHandler:
             end = self.client_buffer.find('\n')
             if end!=-1:
                 break
-        print '%s'%self.client_buffer[:end]#debug
+        print('%s'%self.client_buffer[:end])#debug
         data = (self.client_buffer[:end+1]).split()
         self.client_buffer = self.client_buffer[end+1:]
         return data
@@ -61,7 +67,7 @@ class ConnectionHandler:
         self.target.connect(address)
 
     def _read_write(self):
-        time_out_max = self.timeout/3
+        time_out_max = old_div(self.timeout,3)
         socs = [self.client, self.target]
         count = 0
         while 1:
@@ -90,10 +96,10 @@ def start_server(host='localhost', port=8080, IPv6=False, timeout=60,
         soc_type=socket.AF_INET
     soc = socket.socket(soc_type)
     soc.bind((host, port))
-    print "Serving on %s:%d."%(host, port)#debug
+    print("Serving on %s:%d."%(host, port))#debug
     soc.listen(0)
     while 1:
-        thread.start_new_thread(handler, soc.accept()+(timeout,))
+        _thread.start_new_thread(handler, soc.accept()+(timeout,))
 
 if __name__ == '__main__':
     start_server( host=HOST )
